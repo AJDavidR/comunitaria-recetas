@@ -17,13 +17,40 @@ async function cargarRecetasDesdeJSON() {
 
 // Carga recetas desde localStorage o JSON si es la primera vez
 async function obtenerRecetas() {
-  const datos = localStorage.getItem(STORAGE_KEY);
-  if (datos) {
-    return JSON.parse(datos);
-  } else {
-    return await cargarRecetasDesdeJSON();
+  const recetasDesdeJSON = await cargarRecetasDesdeJSON();
+  const recetasLocal = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+  const idsLocal = recetasLocal.map(r => r.id);
+  const nuevas = recetasDesdeJSON.filter(r => !idsLocal.includes(r.id));
+
+  if (nuevas.length > 0) {
+    const actualizadas = [...recetasLocal, ...nuevas];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(actualizadas));
+    return actualizadas;
   }
+
+  return recetasLocal;
 }
+
+
+  // Si no hay nada en localStorage, inicializa con el JSON
+  if (!local) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(archivo));
+    return archivo;
+  }
+
+  const localRecetas = JSON.parse(local);
+
+  // Si la cantidad de recetas del JSON > que las del localStorage, actualiza
+  if (archivo.length > localRecetas.length) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(archivo));
+    return archivo;
+  }
+
+  // Si son iguales o local tiene más (por recetas agregadas por el usuario), usa el local
+  return localRecetas;
+
+
 
 // Guarda una nueva receta
 async function guardarReceta(receta) {

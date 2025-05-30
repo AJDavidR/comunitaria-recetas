@@ -216,3 +216,10 @@ textarea {
   font-family: var(--fuente-titulos);
   margin-bottom: var(--espaciado-m);
 }
+
+.receta-card img {
+  width: 100%;
+  height: 220px; /* 🔥 define un alto uniforme */
+  object-fit: cover; /* 🔒 recorta la imagen sin deformar */
+  border-radius: var(--radio);
+}
