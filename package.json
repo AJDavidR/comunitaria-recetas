@@ -1,0 +1,20 @@
+{
+  "name": "cocina-comunitaria",
+  "version": "1.0.0",
+  "description": "Aplicación web para compartir recetas de cocina",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "vitest",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "firebase": "^10.8.0",
+    "chart.js": "^4.4.1",
+    "vite": "^5.1.0"
+  },
+  "devDependencies": {
+    "vitest": "^1.2.0"
+  }
+} 

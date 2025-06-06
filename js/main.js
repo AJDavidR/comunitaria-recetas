@@ -1,3 +1,8 @@
+import { modal } from './modal.js';
+import { agregarBotonesExportImport } from './export-import.js';
+import { inicializarEstadisticas } from './estadisticas.js';
+import { inicializarCompartir } from './compartir.js';
+
 // === TEMA CLARO/OSCURO UNIVERSAL ===
 const toggleBtn = document.getElementById('toggle-tema');
 const body = document.body;
@@ -111,4 +116,87 @@ document.addEventListener('DOMContentLoaded', () => {
   inicializarTema();
   inicializarBuscadorYFiltro();
   manejarBotonLimpiar();
+
+  // Initialize all features
+  inicializarNavegacion();
+  inicializarRecetas();
+  inicializarCompartir();
+  agregarBotonesExportImport();
+  
+  // Show statistics if on index page
+  if (window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/')) {
+    inicializarEstadisticas();
+  }
 });
+
+// === Navegación ===
+function inicializarNavegacion() {
+  const links = document.querySelectorAll('.nav-link');
+  links.forEach(link => {
+    if (link.getAttribute('href') === window.location.pathname.split('/').pop()) {
+      link.classList.add('active');
+    }
+  });
+}
+
+// === Recetas ===
+async function inicializarRecetas() {
+  const form = document.getElementById('form-receta');
+  if (form) {
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      
+      const titulo = document.getElementById('titulo').value.trim();
+      const autor = document.getElementById('autor').value.trim();
+      
+      if (titulo.length < 3 || autor.length < 3) {
+        await modal.alert('El título y el autor deben tener al menos 3 caracteres.');
+        return;
+      }
+      
+      const receta = {
+        titulo,
+        autor,
+        imagen: document.getElementById('imagen').value.trim() || 'https://via.placeholder.com/300x200?text=Sin+imagen',
+        categoria: document.getElementById('categoria').value,
+        ingredientes: document.getElementById('ingredientes').value.trim().split('\n').filter(Boolean),
+        preparacion: document.getElementById('preparacion').value.trim().split('\n').filter(Boolean)
+      };
+      
+      guardarRecetaUsuario(receta);
+      form.reset();
+      
+      await modal.alert('¡Tu receta ha sido guardada! 🎉');
+      window.location.href = 'index.html';
+    };
+  }
+  
+  // Replace confirm with modal for delete
+  const btnLimpiar = document.getElementById('btn-limpiar-recetas');
+  if (btnLimpiar) {
+    btnLimpiar.onclick = async () => {
+      const confirmar = await modal.confirm(
+        '¿Seguro que quieres eliminar todas tus recetas guardadas (no las del sistema)?',
+        'Eliminar Recetas'
+      );
+      
+      if (confirmar) {
+        localStorage.removeItem('recetasUsuario');
+        location.reload();
+      }
+    };
+  }
+}
+
+// === Service Worker Registration ===
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(registration => {
+        console.log('ServiceWorker registration successful');
+      })
+      .catch(err => {
+        console.error('ServiceWorker registration failed:', err);
+      });
+  });
+}

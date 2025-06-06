@@ -1,86 +1,96 @@
-# 🍽️ Recetas Gourmet
+# Cocina Comunitaria - Recetas Gourmet 🍳
 
-## 📄 Descripción
+Una aplicación web progresiva (PWA) para compartir y descubrir recetas de cocina.
 
-Este proyecto fue desarrollado en el marco de la asignatura **PSP - Proceso de Software Personal**.  
-Es una aplicación web moderna, funcional y adaptable que permite a los usuarios **consultar, agregar, editar y eliminar recetas de cocina**, explorándolas por categorías y visualizándolas de manera dinámica e intuitiva.
+## Características 🌟
 
-Además, se ha optimizado para mejorar la experiencia del usuario con **modo oscuro, animaciones suaves, validaciones en tiempo real y diseño responsive**.
+- 📱 **PWA Instalable**: Instala la app en tu dispositivo para acceso offline
+- 🧾 **Exportación de Recetas**: Guarda tus recetas en formato JSON
+- 📥 **Importación de Recetas**: Importa recetas desde archivos JSON
+- 📊 **Estadísticas**: Visualiza ingredientes más usados y recetas por categoría
+- 🎨 **Tema Claro/Oscuro**: Interfaz adaptable a tus preferencias
+- 📲 **Compartir Recetas**: Comparte recetas en redes sociales
+- 💬 **Comentarios**: Deja comentarios en las recetas
+- 🔍 **Búsqueda y Filtros**: Encuentra recetas fácilmente
+- 📱 **Diseño Responsivo**: Funciona en cualquier dispositivo
 
----
+## Tecnologías Utilizadas 🛠
 
-## 🛠 Tecnologías empleadas
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Chart.js](https://img.shields.io/badge/Chart.js-F5788D?style=for-the-badge&logo=chartdotjs&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)
+![Service Workers](https://img.shields.io/badge/Service%20Worker-333333?style=for-the-badge&logo=workbox&logoColor=white)
 
-<div align="center">
-  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" />
-  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" />
-  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" />
-  <img src="https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white" />
-</div>
 
----
+- 🌐 HTML5, CSS3, JavaScript (ES6+)
+- 🔥 Firebase (próximamente)
+- 📊 Chart.js – Visualización de datos
+- ⚙️ Service Workers – Funcionalidad offline
+- 🧪 Vitest – Pruebas unitarias y de integración
 
-## ✨ Principales características
+## Instalación 🚀
 
-- ✅ **Agregar recetas** con título, imagen, ingredientes, pasos y categoría.
-- ✏️ **Editar recetas** creadas por el usuario directamente desde el detalle.
-- 🗑️ **Eliminar recetas** con confirmación visual.
-- 📂 **Almacenamiento separado** entre recetas base del sistema y las del usuario (`recetas.json` + `localStorage`).
-- 📊 **Gráfico dinámico** de distribución por categoría con **Chart.js**, animado y con colores personalizados.
-- 🌙 **Modo oscuro automático y manual**, persistente entre sesiones.
-- ⚡ **Interfaz responsiva** adaptada para escritorio y dispositivos móviles.
-- 🧼 **Validaciones inteligentes**: longitud mínima, estructura, duplicados, URL válidas.
-- 🔍 **Buscador con filtros** por título y categoría.
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/tu-usuario/cocina-comunitaria.git
+   cd cocina-comunitaria
+   ```
 
----
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
 
-## 🧱 Estructura del proyecto
+3. Inicia el servidor de desarrollo:
+   ```bash
+   npm run dev
+   ```
 
-```plaintext
-recetas-gourmet/
-├── index.html
-├── agregar.html
-├── receta.html
-├── categorias.html
-├── css/
-│   ├── variables.css
-│   └── styles.css
-├── js/
-│   ├── recetas.js
-│   ├── categorias.js
-│   ├── validaciones.js
-│   └── main.js
-├── data/
-│   └── recetas.json
-├── assets/
-│   └── img/  (opcional para imágenes locales)
-└── README.md
+4. Abre http://localhost:5173 en tu navegador
 
+## Desarrollo 🛠
+
+- `npm run dev`: Inicia servidor de desarrollo
+- `npm run build`: Construye para producción
+- `npm run test`: Ejecuta pruebas
+- `npm run preview`: Vista previa de producción
+
+## Estructura del Proyecto 📁
 
 ```
-🚀 Cómo ejecutar el proyecto
-Debido al uso de fetch() para cargar archivos locales (data/recetas.json), necesitas ejecutar el proyecto en un servidor local:
+cocina-comunitaria/
+├── assets/          # Imágenes e iconos
+├── css/            # Estilos
+├── js/             # JavaScript
+│   ├── main.js     # Punto de entrada
+│   ├── recetas.js  # Lógica de recetas
+│   ├── modal.js    # Sistema de modales
+│   └── ...
+├── tests/          # Pruebas
+├── index.html      # Página principal
+└── ...
+```
 
-# Con Python 3
-python -m http.server
-Luego abre en tu navegador:
-http://localhost:8000/index.html
+## Próximas Características 🎯
+
+- 🌐 Migración a Firebase para persistencia real
+- 👥 Sistema de usuarios y colaboradores
+- 📱 Notificaciones push
+- 🔄 Sincronización offline
+- 🌍 Internacionalización
+
+## Contribuir 🤝
+
+1. Haz fork del proyecto
+2. Crea tu rama de características (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
 
 
-📌 Estado actual y extensiones futuras
-Este proyecto está preparado para crecer. Algunas funcionalidades consideradas para versiones futuras:
+## Contacto 📧
 
-📥 Importar recetas desde archivo .json (opcional, actualmente omitido).
-
-📤 Exportar recetas del usuario a archivo .json.
-
-☁️ Conexión con base de datos en la nube (Firebase o Supabase).
-
-🧩 Modal personalizado de confirmación.
-
-🔐 Autenticación de usuarios y modo administrador oculto.
-
-🛜 Conversión a aplicación PWA para uso sin conexión.
-
-👨‍💻 Créditos
-Desarrollado por los estudiantes del grupo B07-6 del Politécnico Grancolombiano como parte de la entrega del escenario 3 del curso PSP.
+👨‍💻 Créditos Desarrollado por los estudiantes del grupo B07-6 del Politécnico Grancolombiano como parte de la entrega del escenario 3 del curso PSP.
