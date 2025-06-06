@@ -4,19 +4,101 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Categorías | Cocina Comunitaria</title>
-    <link rel="stylesheet" href="css/variables.css" />
-    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="../../css/variables.css" />
+    <link rel="stylesheet" href="../../css/styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/public/sw.js')
+            .then(registration => {
+              console.log('ServiceWorker registration successful');
+            })
+            .catch(err => {
+              console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+      }
+    </script>
+    <style>
+      .section-title {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        color: var(--color-principal);
+        font-family: var(--fuente-titulos);
+        text-align: center;
+      }
+      body.tema-oscuro .section-title {
+        color: #f8f8f8;
+      }
+      body.tema-oscuro .logo {
+        color: #fff;
+      }
+      body.tema-oscuro .nav-link {
+        color: #fff !important;
+        opacity: 1;
+      }
+      body.tema-oscuro .nav-link.active {
+        color: #ffe066 !important;
+        text-decoration: underline;
+      }
+      body.tema-oscuro .nav-link:hover {
+        color: #ffe066 !important;
+      }
+      .categoria-seccion {
+        margin-bottom: 2.5rem;
+      }
+      .categoria-titulo {
+        font-size: 1.3rem;
+        color: var(--color-acento);
+        margin-bottom: 1rem;
+        font-family: var(--fuente-titulos);
+      }
+      .recetas-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.5rem;
+      }
+      .grafico-categorias {
+        margin-top: 2.5rem;
+        background: var(--color-blanco);
+        border-radius: 12px;
+        box-shadow: var(--sombra-suave);
+        padding: 1.5rem;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      body.tema-oscuro .grafico-categorias {
+        background: var(--color-secundario);
+        color: var(--color-texto);
+        box-shadow: var(--sombra-media);
+      }
+      @media (max-width: 600px) {
+        .grafico-categorias {
+          padding: 0.5rem;
+        }
+        .recetas-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .no-categorias {
+        text-align: center;
+        color: var(--color-error);
+        font-size: 1.1rem;
+        margin: 2rem 0;
+      }
+    </style>
   </head>
   <body>
     <header class="header">
       <div class="container">
         <h1 class="logo">Recetas <span class="highlight">Gourmet</span></h1>
         <nav class="nav">
-          <a href="index.html" class="nav-link active">Inicio</a>
-          <a href="agregar.html" class="nav-link">Agregar Receta</a>
+          <a href="home.html" class="nav-link active">Inicio</a>
+          <a href="agregar-receta.html" class="nav-link">Agregar Receta</a>
           <a href="categorias.html" class="nav-link">Categorías</a>
         </nav>
         <button id="toggle-tema" class="boton-tema">🌓 Cambiar tema</button>
@@ -41,8 +123,7 @@
       </div>
     </footer>
 
-    <script src="js/recetas.js"></script>
-    <script src="js/categorias.js"></script>
-    <script src="js/main.js"></script>
+    <script type="module" src="../../js/modules/categorias.js"></script>
+    <script type="module" src="../../js/modules/tema.js"></script>
   </body>
 </html>

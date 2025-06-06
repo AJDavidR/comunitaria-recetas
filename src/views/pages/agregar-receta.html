@@ -12,19 +12,19 @@
     <title>Agregar Receta | Cocina Comunitaria</title>
     
     <!-- PWA Icons -->
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-32x32.png" />
-    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png" />
-    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icons/icon-32x32.png" />
+    <link rel="apple-touch-icon" href="../../assets/icons/icon-192x192.png" />
+    <link rel="manifest" href="../../../public/manifest.json" />
     
     <!-- Styles -->
-    <link rel="stylesheet" href="css/variables.css" />
-    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="../../css/variables.css" />
+    <link rel="stylesheet" href="../../css/styles.css" />
     
     <!-- PWA Registration -->
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
+          navigator.serviceWorker.register('/public/sw.js')
             .then(registration => {
               console.log('ServiceWorker registration successful');
             })
@@ -34,48 +34,225 @@
         });
       }
     </script>
+    <style>
+      .formulario-receta {
+        background: var(--color-blanco);
+        padding: 2.5rem 2rem;
+        border-radius: var(--radio);
+        box-shadow: var(--sombra-media);
+        max-width: 700px;
+        margin: 2rem auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .formulario-receta h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        color: var(--color-principal);
+        font-family: var(--fuente-titulos);
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+
+      .form-group label {
+        font-weight: bold;
+        color: var(--color-texto);
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        padding: 0.9rem;
+        border: 1.5px solid var(--color-gris-claro);
+        border-radius: var(--radio);
+        font-size: 1.1rem;
+        background: var(--color-blanco);
+        color: var(--color-texto);
+        box-shadow: var(--sombra-suave);
+        transition: all 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        border-color: var(--color-acento);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(196, 154, 108, 0.2);
+      }
+
+      .form-group.error input,
+      .form-group.error textarea,
+      .form-group.error select {
+        border-color: var(--color-error);
+      }
+
+      .form-error {
+        color: var(--color-error);
+        font-size: 0.98rem;
+        margin-top: 0.2rem;
+        min-height: 1.2em;
+      }
+
+      .mensaje-exito {
+        color: var(--color-exito);
+        background: var(--color-blanco);
+        border: 1px solid var(--color-exito);
+        border-radius: var(--radio);
+        padding: 1rem;
+        margin-top: 1rem;
+        text-align: center;
+        font-weight: bold;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.4s ease;
+      }
+
+      .mensaje-exito.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .preview-imagen {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 0.5rem;
+      }
+
+      .preview-imagen img {
+        max-width: 220px;
+        max-height: 140px;
+        border-radius: var(--radio);
+        box-shadow: var(--sombra-suave);
+        margin-bottom: 0.5rem;
+      }
+
+      .loader {
+        border: 4px solid var(--color-gris-claro);
+        border-top: 4px solid var(--color-acento);
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        animation: spin 1s linear infinite;
+        margin: 1rem auto;
+        display: none;
+      }
+
+      .loader.visible {
+        display: block;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      /* Estilos específicos para tema oscuro */
+      body.tema-oscuro .formulario-receta {
+        background: var(--color-blanco);
+        box-shadow: var(--sombra-fuerte);
+      }
+
+      body.tema-oscuro .form-group input,
+      body.tema-oscuro .form-group textarea,
+      body.tema-oscuro .form-group select {
+        background: var(--color-blanco);
+        color: var(--color-texto);
+        border-color: var(--color-gris-claro);
+      }
+
+      body.tema-oscuro .form-group input:focus,
+      body.tema-oscuro .form-group textarea:focus,
+      body.tema-oscuro .form-group select:focus {
+        border-color: var(--color-acento);
+        box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.2);
+      }
+
+      body.tema-oscuro .mensaje-exito {
+        background: var(--color-blanco);
+        border-color: var(--color-exito);
+      }
+
+      body.tema-oscuro .preview-imagen img {
+        box-shadow: var(--sombra-media);
+      }
+
+      body.tema-oscuro .logo {
+        color: #fff;
+      }
+      body.tema-oscuro .nav-link {
+        color: #fff !important;
+        opacity: 1;
+      }
+      body.tema-oscuro .nav-link.active {
+        color: #ffe066 !important;
+        text-decoration: underline;
+      }
+      body.tema-oscuro .nav-link:hover {
+        color: #ffe066 !important;
+      }
+
+      @media (max-width: 600px) {
+        .formulario-receta {
+          padding: 1rem 0.5rem;
+          margin: 1rem;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+          font-size: 1rem;
+        }
+        .btn {
+          width: 100%;
+        }
+      }
+    </style>
   </head>
   <body>
     <header class="header">
       <div class="container">
         <h1 class="logo">Recetas <span class="highlight">Gourmet</span></h1>
         <nav class="nav">
-          <a href="index.html" class="nav-link">Inicio</a>
-          <a href="agregar.html" class="nav-link active" data-protegido>Agregar Receta</a>
+          <a href="home.html" class="nav-link">Inicio</a>
+          <a href="agregar-receta.html" class="nav-link active" data-protegido>Agregar Receta</a>
           <a href="categorias.html" class="nav-link" data-protegido>Categorías</a>
         </nav>
-        <div class="auth-buttons">
-          <span class="usuario" data-usuario></span>
-          <button id="btn-logout" class="btn btn-outline" data-auth="logout">Cerrar Sesión</button>
-          <button id="btn-login" class="btn" data-auth="login">Iniciar Sesión</button>
-        </div>
         <button id="toggle-tema" class="boton-tema">🌓 Cambiar tema</button>
       </div>
     </header>
 
     <main class="main container">
-      <!-- Contenido protegido -->
-      <section class="formulario-receta" data-protegido>
+      <section class="formulario-receta" data-protegido aria-label="Formulario para agregar receta">
         <h2>Comparte tu receta</h2>
-        <form id="form-receta">
-          <div class="form-group">
+        <form id="form-receta" autocomplete="on" novalidate>
+          <div class="form-group" id="titulo-group">
             <label for="titulo">Título de la receta</label>
-            <input type="text" id="titulo" name="titulo" required />
+            <input type="text" id="titulo" name="titulo" required aria-required="true" aria-describedby="titulo-error" />
+            <div class="form-error" id="titulo-error"></div>
           </div>
-
-          <div class="form-group">
+          <div class="form-group" id="autor-group">
             <label for="autor">Autor</label>
-            <input type="text" id="autor" name="autor" readonly />
+            <input type="text" id="autor" name="autor" readonly aria-readonly="true" />
+            <div class="form-error" id="autor-error"></div>
           </div>
-
-          <div class="form-group">
+          <div class="form-group" id="imagen-group">
             <label for="imagen">URL de imagen</label>
-            <input type="url" id="imagen" name="imagen" placeholder="https://..." />
+            <input type="url" id="imagen" name="imagen" placeholder="https://..." aria-describedby="imagen-error" />
+            <div class="preview-imagen" id="preview-imagen"></div>
+            <div class="form-error" id="imagen-error"></div>
           </div>
-
-          <div class="form-group">
+          <div class="form-group" id="categoria-group">
             <label for="categoria">Categoría</label>
-            <select id="categoria" name="categoria" required>
+            <select id="categoria" name="categoria" required aria-required="true" aria-describedby="categoria-error">
               <option value="">Selecciona una categoría</option>
               <option value="Desayuno">Desayuno</option>
               <option value="Almuerzo">Almuerzo</option>
@@ -83,32 +260,23 @@
               <option value="Postre">Postre</option>
               <option value="Bebida">Bebida</option>
             </select>
+            <div class="form-error" id="categoria-error"></div>
           </div>
-
-          <div class="form-group">
+          <div class="form-group" id="ingredientes-group">
             <label for="ingredientes">Ingredientes (uno por línea)</label>
-            <textarea id="ingredientes" name="ingredientes" rows="5" required></textarea>
+            <textarea id="ingredientes" name="ingredientes" rows="5" required aria-required="true" aria-describedby="ingredientes-error"></textarea>
+            <div class="form-error" id="ingredientes-error"></div>
           </div>
-
-          <div class="form-group">
+          <div class="form-group" id="preparacion-group">
             <label for="preparacion">Pasos de preparación (uno por línea)</label>
-            <textarea id="preparacion" name="preparacion" rows="6" required></textarea>
+            <textarea id="preparacion" name="preparacion" rows="6" required aria-required="true" aria-describedby="preparacion-error"></textarea>
+            <div class="form-error" id="preparacion-error"></div>
           </div>
-
           <button type="submit" class="btn">Agregar Receta</button>
+          <div class="loader" id="loader"></div>
         </form>
-
-        <div id="mensaje-exito" class="mensaje-exito" style="display: none;">
-          ¡Tu receta ha sido guardada! 🎉
-        </div>
+        <div id="mensaje-exito" class="mensaje-exito" style="display: none;">¡Tu receta ha sido guardada! 🎉</div>
       </section>
-
-      <!-- Mensaje para usuarios no autenticados -->
-      <div class="auth-message" data-auth="login">
-        <h2>Acceso Requerido</h2>
-        <p>Para agregar recetas, por favor inicia sesión.</p>
-        <a href="login.html" class="btn">Iniciar Sesión</a>
-      </div>
     </main>
 
     <footer class="footer">
@@ -117,29 +285,7 @@
       </div>
     </footer>
 
-    <script type="module">
-      import { inicializarAuthMiddleware } from './js/auth-middleware.js';
-      import { inicializarAuth, obtenerUsuarioActual } from './js/auth.js';
-      import { inicializarTema } from './js/tema.js';
-      import { inicializarFormularioReceta } from './js/recetas.js';
-
-      // Inicializar autenticación y middleware
-      inicializarAuth();
-      inicializarAuthMiddleware();
-
-      // Inicializar formulario solo si el usuario está autenticado
-      if (document.querySelector('[data-protegido]').style.display !== 'none') {
-        // Establecer el autor automáticamente
-        const usuario = obtenerUsuarioActual();
-        if (usuario) {
-          document.getElementById('autor').value = usuario.email;
-        }
-        
-        inicializarFormularioReceta();
-      }
-
-      // Inicializar tema (siempre disponible)
-      inicializarTema();
-    </script>
+    <script type="module" src="../../js/modules/recetas.js"></script>
+    <script type="module" src="../../js/modules/tema.js"></script>
   </body>
 </html>

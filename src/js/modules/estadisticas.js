@@ -1,3 +1,5 @@
+// Archivo dummy para evitar errores 404 en desarrollo local
+
 import Chart from 'chart.js/auto';
 import { cargarRecetasDelUsuario } from './recetas.js';
 

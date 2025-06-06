@@ -1,6 +1,8 @@
+import { obtenerTodasLasRecetas } from './local-storage.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
   const contenedor = document.getElementById('categorias-list');
-  const recetas = await obtenerRecetas();
+  const recetas = await obtenerTodasLasRecetas();
 
   // Normalizar y agrupar recetas por categoría
   const categorias = {};

@@ -1,3 +1,5 @@
+// Archivo dummy para evitar errores 404 en desarrollo local
+
 import { modal } from './modal.js';
 import { cargarRecetasDelUsuario, guardarRecetaUsuario } from './recetas.js';
 

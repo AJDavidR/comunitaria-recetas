@@ -112,4 +112,9 @@ export class Modal {
 }
 
 // Create singleton instance
-export const modal = new Modal(); 
+export const modal = new Modal();
+
+export async function mostrarModal(titulo, mensaje) {
+  // Modal simple para pruebas locales
+  alert(`${titulo}\n\n${mensaje}`);
+} 

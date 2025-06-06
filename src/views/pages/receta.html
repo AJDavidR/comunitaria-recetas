@@ -3,17 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Detalle de Receta | Recetas Gourmet</title>
-  <link rel="stylesheet" href="css/variables.css" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <title>Receta | Cocina Comunitaria</title>
+  <link rel="stylesheet" href="../../css/variables.css" />
+  <link rel="stylesheet" href="../../css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/public/sw.js')
+          .then(registration => {
+            console.log('ServiceWorker registration successful');
+          })
+          .catch(err => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+      });
+    }
+  </script>
 </head>
 <body>
   <header class="header">
     <div class="container">
       <h1 class="logo">Recetas <span class="highlight">Gourmet</span></h1>
       <nav class="nav">
-        <a href="index.html" class="nav-link">Inicio</a>
-        <a href="agregar.html" class="nav-link">Agregar Receta</a>
+        <a href="home.html" class="nav-link">Inicio</a>
+        <a href="agregar-receta.html" class="nav-link">Agregar Receta</a>
         <a href="categorias.html" class="nav-link">Categorías</a>
       </nav>
       <button id="toggle-tema" class="boton-tema">🌓 Cambiar tema</button>
@@ -21,32 +35,26 @@
   </header>
 
   <main class="main container">
-    <section id="detalle-receta">
-      <h2 class="receta-titulo">Cargando...</h2>
-      <img class="receta-imagen" src="" alt="" />
-      <p class="receta-descripcion"></p>
-      <ul id="lista-ingredientes"></ul>
-      <ol id="lista-pasos"></ol>
-    </section>
+    <div id="receta-detalle" class="receta-detalle">
+      <!-- El contenido se cargará dinámicamente -->
+    </div>
 
-    <section class="comentarios-seccion">
+    <div id="comentarios-seccion" class="comentarios-seccion">
       <h3>Comentarios</h3>
-      <form id="form-comentario">
-        <div class="form-group">
-          <label for="nombre-comentario">Tu nombre</label>
-          <input type="text" id="nombre-comentario" placeholder="Ej: Juan" required />
-        </div>
-
-        <div class="form-group">
-          <label for="comentario-texto">Comentario</label>
-          <textarea id="comentario-texto" rows="3" placeholder="Escribe tu comentario..." required></textarea>
-        </div>
-
-        <button type="submit" class="btn">Publicar</button>
+      <div id="lista-comentarios" class="lista-comentarios">
+        <!-- Los comentarios se cargarán dinámicamente -->
+      </div>
+      <form id="form-comentario" class="form-comentario">
+        <textarea 
+          id="nuevo-comentario" 
+          placeholder="Escribe tu comentario..." 
+          required
+          minlength="3"
+          maxlength="300"
+        ></textarea>
+        <button type="submit" class="btn">Publicar comentario</button>
       </form>
-
-      <ul id="lista-comentarios" class="comentarios-lista"></ul>
-    </section>
+    </div>
   </main>
 
   <footer class="footer">
@@ -55,8 +63,7 @@
     </div>
   </footer>
 
-  <script src="js/recetas.js"></script>
-  <script src="js/validaciones.js"></script>
-  <script src="js/main.js"></script>
+  <script type="module" src="../../js/modules/receta-detalle.js"></script>
+  <script type="module" src="../../js/modules/tema.js"></script>
 </body>
 </html>

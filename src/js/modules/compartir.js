@@ -1,3 +1,5 @@
+// Archivo dummy para evitar errores 404 en desarrollo local
+
 import { modal } from './modal.js';
 
 export function inicializarCompartir() {
