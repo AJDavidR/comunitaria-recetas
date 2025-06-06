@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Regístrate en Cocina Comunitaria para compartir tus recetas" />
+    <meta name="theme-color" content="#4CAF50" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Recetas Gourmet" />
+    
+    <title>Registro | Cocina Comunitaria</title>
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-32x32.png" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png" />
+    <link rel="manifest" href="manifest.json" />
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <h1 class="logo">Recetas <span class="highlight">Gourmet</span></h1>
+        <nav class="nav">
+          <a href="home.html" class="nav-link">Inicio</a>
+        </nav>
+        <button id="toggle-tema" class="boton-tema">🌓 Cambiar tema</button>
+      </div>
+    </header>
+
+    <main class="main container">
+      <section class="auth-section">
+        <div class="auth-container">
+          <h2>Crear una cuenta</h2>
+          <p class="auth-subtitle">Únete a nuestra comunidad de cocineros</p>
+
+          <form id="form-registro" class="auth-form">
+            <div class="form-group">
+              <label for="nombre">Nombre completo</label>
+              <input 
+                type="text" 
+                id="nombre" 
+                name="nombre" 
+                required 
+                placeholder="Tu nombre completo"
+                minlength="3"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Correo electrónico</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                required 
+                placeholder="tu@email.com"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="password">Contraseña</label>
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                required 
+                placeholder="Mínimo 6 caracteres"
+                minlength="6"
+              />
+              <small class="form-help">La contraseña debe tener al menos 6 caracteres</small>
+            </div>
+
+            <div class="form-group">
+              <label for="confirmar-password">Confirmar contraseña</label>
+              <input 
+                type="password" 
+                id="confirmar-password" 
+                name="confirmar-password" 
+                required 
+                placeholder="Repite tu contraseña"
+                minlength="6"
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Crear cuenta</button>
+          </form>
+
+          <div class="auth-divider">
+            <span>o regístrate con</span>
+          </div>
+
+          <button id="btn-google" class="btn btn-outline btn-block">
+            <img src="assets/icons/google.svg" alt="Google" class="btn-icon" />
+            Continuar con Google
+          </button>
+
+          <p class="auth-footer">
+            ¿Ya tienes una cuenta? 
+            <a href="login.html" class="auth-link">Inicia sesión</a>
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2025 Cocina Comunitaria. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module">
+      import { inicializarAuth } from './js/auth.js';
+      import { inicializarTema } from './js/tema.js';
+      import { mostrarModal } from './js/modal.js';
+      import { registrarse, iniciarSesionConGoogle } from './js/auth.js';
+
+      // Inicializar tema
+      inicializarTema();
+
+      // Inicializar formulario de registro
+      const formRegistro = document.getElementById('form-registro');
+      const btnGoogle = document.getElementById('btn-google');
+
+      if (formRegistro) {
+        formRegistro.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          const password = formRegistro.password.value;
+          const confirmarPassword = formRegistro['confirmar-password'].value;
+
+          // Validar que las contraseñas coincidan
+          if (password !== confirmarPassword) {
+            mostrarModal('Error', 'Las contraseñas no coinciden');
+            return;
+          }
+
+          try {
+            const email = formRegistro.email.value;
+            await registrarse(email, password);
+            // La redirección se maneja en el middleware de autenticación
+          } catch (error) {
+            mostrarModal('Error', error.message);
+          }
+        });
+      }
+
+      if (btnGoogle) {
+        btnGoogle.addEventListener('click', async () => {
+          try {
+            await iniciarSesionConGoogle();
+            // La redirección se maneja en el middleware de autenticación
+          } catch (error) {
+            mostrarModal('Error', error.message);
+          }
+        });
+      }
+
+      // Inicializar autenticación
+      inicializarAuth();
+    </script>
+  </body>
+</html> 

@@ -1,0 +1,63 @@
+{
+  "rules": {
+    "recetas": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "$recetaId": {
+        ".validate": "newData.hasChildren(['titulo', 'autor', 'ingredientes', 'preparacion', 'categoria'])",
+        "autor": {
+          ".validate": "newData.val() === auth.token.email"
+        },
+        "titulo": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "ingredientes": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "preparacion": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "categoria": {
+          ".validate": "newData.isString() && newData.val().matches(/^(Desayuno|Almuerzo|Cena|Postre|Bebida)$/)"
+        },
+        "imagen": {
+          ".validate": "newData.isString() || !newData.exists()"
+        },
+        "fechaCreacion": {
+          ".validate": "newData.isNumber()"
+        }
+      }
+    },
+    "comentarios": {
+      ".read": "auth != null",
+      "$recetaId": {
+        ".write": "auth != null",
+        "$comentarioId": {
+          ".validate": "newData.hasChildren(['autor', 'texto', 'fecha'])",
+          "autor": {
+            ".validate": "newData.val() === auth.token.email"
+          },
+          "texto": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "fecha": {
+            ".validate": "newData.isNumber()"
+          }
+        }
+      }
+    },
+    "usuarios": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['email', 'nombre'])",
+        "email": {
+          ".validate": "newData.val() === auth.token.email"
+        },
+        "nombre": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        }
+      }
+    }
+  }
+} 

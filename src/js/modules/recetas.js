@@ -1,3 +1,18 @@
+import { 
+  guardarReceta, 
+  obtenerRecetas, 
+  eliminarReceta, 
+  actualizarReceta,
+  buscarRecetas,
+  filtrarRecetasPorCategoria,
+  agregarComentario,
+  obtenerComentarios,
+  darLike
+} from './database.js';
+import { mostrarModal } from './modal.js';
+import { ref, push, set } from 'firebase/database';
+import { db } from './firebase.js';
+
 const STORAGE_KEY = 'recetasUsuario';
 
 // === Cargar recetas ===
@@ -334,4 +349,253 @@ function configurarFormularioComentarios(idReceta) {
 
     form.reset();
   });
+}
+
+// Inicializar el formulario de recetas
+export function inicializarFormularioReceta() {
+  const form = document.getElementById('form-receta');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const receta = {
+      titulo: formData.get('titulo'),
+      autor: formData.get('autor'),
+      imagen: formData.get('imagen'),
+      categoria: formData.get('categoria'),
+      ingredientes: formData.get('ingredientes').split('\n').filter(i => i.trim()),
+      preparacion: formData.get('preparacion').split('\n').filter(p => p.trim())
+    };
+
+    try {
+      await guardarReceta(receta);
+      form.reset();
+      mostrarModal('¡Éxito!', 'La receta ha sido guardada correctamente.');
+      
+      // Mostrar mensaje de éxito
+      const mensajeExito = document.getElementById('mensaje-exito');
+      if (mensajeExito) {
+        mensajeExito.style.display = 'block';
+        setTimeout(() => {
+          mensajeExito.style.display = 'none';
+        }, 3000);
+      }
+    } catch (error) {
+      mostrarModal('Error', 'No se pudo guardar la receta: ' + error.message);
+    }
+  });
+}
+
+// Cargar y mostrar recetas
+export async function cargarRecetas(contenedor) {
+  if (!contenedor) return;
+
+  try {
+    const recetas = await obtenerRecetas();
+    mostrarRecetas(recetas, contenedor);
+  } catch (error) {
+    mostrarModal('Error', 'No se pudieron cargar las recetas: ' + error.message);
+  }
+}
+
+// Mostrar recetas en el contenedor
+function mostrarRecetas(recetas, contenedor) {
+  contenedor.innerHTML = '';
+
+  if (recetas.length === 0) {
+    contenedor.innerHTML = '<p class="no-recetas">No hay recetas disponibles.</p>';
+    return;
+  }
+
+  recetas.forEach(receta => {
+    const recetaElement = crearElementoReceta(receta);
+    contenedor.appendChild(recetaElement);
+  });
+}
+
+// Crear elemento HTML para una receta
+function crearElementoReceta(receta) {
+  const article = document.createElement('article');
+  article.className = 'receta-card';
+  article.dataset.id = receta.id;
+
+  article.innerHTML = `
+    <div class="receta-imagen">
+      <img src="${receta.imagen || 'assets/img/placeholder.jpg'}" alt="${receta.titulo}" />
+    </div>
+    <div class="receta-contenido">
+      <h3 class="receta-titulo">${receta.titulo}</h3>
+      <p class="receta-autor">Por: ${receta.autor}</p>
+      <p class="receta-categoria">${receta.categoria}</p>
+      <div class="receta-stats">
+        <span>❤️ ${receta.likes || 0}</span>
+        <span>💬 ${receta.comentarios || 0}</span>
+      </div>
+      <div class="receta-acciones">
+        <button class="btn btn-outline btn-ver-receta">Ver Receta</button>
+        <button class="btn btn-outline btn-like" ${!receta.liked ? '' : 'disabled'}>
+          ${receta.liked ? '❤️ Me gusta' : '🤍 Me gusta'}
+        </button>
+      </div>
+    </div>
+  `;
+
+  // Agregar event listeners
+  const btnVer = article.querySelector('.btn-ver-receta');
+  btnVer.addEventListener('click', () => {
+    window.location.href = `receta.html?id=${receta.id}`;
+  });
+
+  const btnLike = article.querySelector('.btn-like');
+  btnLike.addEventListener('click', async () => {
+    try {
+      await darLike(receta.id);
+      btnLike.disabled = true;
+      btnLike.textContent = '❤️ Me gusta';
+      const likesSpan = article.querySelector('.receta-stats span:first-child');
+      likesSpan.textContent = `❤️ ${(receta.likes || 0) + 1}`;
+    } catch (error) {
+      mostrarModal('Error', 'No se pudo dar like: ' + error.message);
+    }
+  });
+
+  return article;
+}
+
+// Inicializar búsqueda y filtros
+export function inicializarBusqueda() {
+  const buscador = document.getElementById('buscador-recetas');
+  const filtroCategoria = document.getElementById('filtro-categoria');
+  const contenedor = document.getElementById('recetas-list');
+  const btnLimpiar = document.getElementById('btn-limpiar-recetas');
+
+  if (!buscador || !filtroCategoria || !contenedor) return;
+
+  let timeoutId;
+
+  // Búsqueda con debounce
+  buscador.addEventListener('input', (e) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(async () => {
+      const termino = e.target.value.trim();
+      if (termino) {
+        try {
+          const resultados = await buscarRecetas(termino);
+          mostrarRecetas(resultados, contenedor);
+        } catch (error) {
+          mostrarModal('Error', 'Error en la búsqueda: ' + error.message);
+        }
+      } else {
+        cargarRecetas(contenedor);
+      }
+    }, 300);
+  });
+
+  // Filtro por categoría
+  filtroCategoria.addEventListener('change', async (e) => {
+    const categoria = e.target.value;
+    if (categoria) {
+      try {
+        const recetas = await filtrarRecetasPorCategoria(categoria);
+        mostrarRecetas(recetas, contenedor);
+      } catch (error) {
+        mostrarModal('Error', 'Error al filtrar: ' + error.message);
+      }
+    } else {
+      cargarRecetas(contenedor);
+    }
+  });
+
+  // Botón limpiar
+  if (btnLimpiar) {
+    btnLimpiar.addEventListener('click', () => {
+      buscador.value = '';
+      filtroCategoria.value = '';
+      cargarRecetas(contenedor);
+    });
+  }
+}
+
+// Inicializar comentarios
+export async function inicializarComentarios(recetaId, contenedor) {
+  if (!contenedor) return;
+
+  const formComentario = document.getElementById('form-comentario');
+  if (formComentario) {
+    formComentario.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const texto = formComentario.querySelector('textarea').value.trim();
+      
+      if (texto) {
+        try {
+          await agregarComentario(recetaId, texto);
+          formComentario.reset();
+          cargarComentarios(recetaId, contenedor);
+        } catch (error) {
+          mostrarModal('Error', 'No se pudo agregar el comentario: ' + error.message);
+        }
+      }
+    });
+  }
+
+  await cargarComentarios(recetaId, contenedor);
+}
+
+// Cargar comentarios
+async function cargarComentarios(recetaId, contenedor) {
+  try {
+    const comentarios = await obtenerComentarios(recetaId);
+    mostrarComentarios(comentarios, contenedor);
+  } catch (error) {
+    mostrarModal('Error', 'No se pudieron cargar los comentarios: ' + error.message);
+  }
+}
+
+// Mostrar comentarios
+function mostrarComentarios(comentarios, contenedor) {
+  contenedor.innerHTML = '';
+
+  if (comentarios.length === 0) {
+    contenedor.innerHTML = '<p class="no-comentarios">No hay comentarios aún.</p>';
+    return;
+  }
+
+  comentarios.forEach(comentario => {
+    const comentarioElement = document.createElement('div');
+    comentarioElement.className = 'comentario';
+    comentarioElement.innerHTML = `
+      <p class="comentario-texto">${comentario.texto}</p>
+      <div class="comentario-meta">
+        <span class="comentario-autor">${comentario.autor}</span>
+        <span class="comentario-fecha">${new Date(comentario.fecha).toLocaleDateString()}</span>
+      </div>
+    `;
+    contenedor.appendChild(comentarioElement);
+  });
+}
+
+// Función para crear una receta de prueba
+export async function crearRecetaPrueba() {
+  const recetaPrueba = {
+    titulo: "Pasta Carbonara",
+    autor: "usuario@ejemplo.com",
+    ingredientes: "200g pasta\n150g panceta\n2 huevos\n50g queso parmesano\nPimienta negra",
+    preparacion: "1. Cocinar la pasta\n2. Freír la panceta\n3. Mezclar huevos y queso\n4. Combinar todo",
+    categoria: "Almuerzo",
+    imagen: "https://ejemplo.com/carbonara.jpg",
+    fechaCreacion: Date.now()
+  };
+
+  try {
+    const recetasRef = ref(db, 'recetas');
+    const nuevaRecetaRef = push(recetasRef);
+    await set(nuevaRecetaRef, recetaPrueba);
+    console.log('Receta de prueba creada con ID:', nuevaRecetaRef.key);
+    return nuevaRecetaRef.key;
+  } catch (error) {
+    console.error('Error al crear receta de prueba:', error);
+    throw error;
+  }
 }

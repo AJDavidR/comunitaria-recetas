@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba Base de Datos</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .resultado { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .error { color: red; }
+        .exito { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Prueba de Base de Datos</h1>
+    <button id="btn-crear-usuario">Crear Usuario de Prueba</button>
+    <button id="btn-crear-receta">Crear Receta de Prueba</button>
+    <div id="resultado"></div>
+
+    <script type="module">
+        import { crearUsuarioPrueba } from './js/auth.js';
+        import { crearRecetaPrueba } from './js/recetas.js';
+
+        const resultado = document.getElementById('resultado');
+        
+        function mostrarMensaje(mensaje, esError = false) {
+            const div = document.createElement('div');
+            div.className = `resultado ${esError ? 'error' : 'exito'}`;
+            div.textContent = mensaje;
+            resultado.appendChild(div);
+        }
+
+        document.getElementById('btn-crear-usuario').addEventListener('click', async () => {
+            try {
+                const usuario = await crearUsuarioPrueba();
+                mostrarMensaje(`Usuario creado/iniciado sesión: ${usuario.email}`);
+            } catch (error) {
+                mostrarMensaje(`Error: ${error.message}`, true);
+            }
+        });
+
+        document.getElementById('btn-crear-receta').addEventListener('click', async () => {
+            try {
+                const recetaId = await crearRecetaPrueba();
+                mostrarMensaje(`Receta creada con ID: ${recetaId}`);
+            } catch (error) {
+                mostrarMensaje(`Error: ${error.message}`, true);
+            }
+        });
+    </script>
+</body>
+</html> 

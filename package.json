@@ -7,14 +7,16 @@
     "dev": "vite",
     "build": "vite build",
     "test": "vitest",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-icons": "node scripts/generate-icons.js"
   },
   "dependencies": {
-    "firebase": "^10.8.0",
     "chart.js": "^4.4.1",
+    "firebase": "^10.14.1",
     "vite": "^5.1.0"
   },
   "devDependencies": {
+    "sharp": "^0.33.5",
     "vitest": "^1.2.0"
   }
-} 
+}

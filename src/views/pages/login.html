@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Inicia sesión en Cocina Comunitaria" />
+    <meta name="theme-color" content="#4CAF50" />
+    <title>Iniciar Sesión | Cocina Comunitaria</title>
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-32x32.png" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png" />
+    <link rel="manifest" href="manifest.json" />
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <style>
+      .auth-container {
+        max-width: 400px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: var(--color-fondo-secundario);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .auth-tabs {
+        display: flex;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid var(--color-borde);
+      }
+
+      .auth-tab {
+        flex: 1;
+        padding: 1rem;
+        text-align: center;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+      }
+
+      .auth-tab.active {
+        border-bottom-color: var(--color-primario);
+        color: var(--color-primario);
+      }
+
+      .auth-form {
+        display: none;
+      }
+
+      .auth-form.active {
+        display: block;
+      }
+
+      .btn-google {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.75rem;
+        margin: 1rem 0;
+        background: #fff;
+        border: 1px solid var(--color-borde);
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .btn-google img {
+        width: 24px;
+        height: 24px;
+      }
+
+      .auth-links {
+        margin-top: 1rem;
+        text-align: center;
+      }
+
+      .auth-links a {
+        color: var(--color-primario);
+        text-decoration: none;
+      }
+
+      .auth-links a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <h1 class="logo">Recetas <span class="highlight">Gourmet</span></h1>
+        <nav class="nav">
+          <a href="index.html" class="nav-link">Inicio</a>
+          <a href="agregar.html" class="nav-link">Agregar Receta</a>
+          <a href="categorias.html" class="nav-link">Categorías</a>
+        </nav>
+        <button id="toggle-tema" class="boton-tema">🌓 Cambiar tema</button>
+      </div>
+    </header>
+
+    <main class="main container">
+      <div class="auth-container">
+        <div class="auth-tabs">
+          <div class="auth-tab active" data-tab="login">Iniciar Sesión</div>
+          <div class="auth-tab" data-tab="register">Registrarse</div>
+        </div>
+
+        <form id="form-login" class="auth-form active">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" name="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Contraseña</label>
+            <input type="password" id="login-password" name="password" required />
+          </div>
+
+          <button type="submit" class="btn">Iniciar Sesión</button>
+
+          <button type="button" id="btn-google" class="btn-google">
+            <img src="assets/google-icon.png" alt="Google" />
+            Continuar con Google
+          </button>
+
+          <div class="auth-links">
+            <button type="button" id="btn-recuperar" class="link">¿Olvidaste tu contraseña?</button>
+          </div>
+        </form>
+
+        <form id="form-registro" class="auth-form">
+          <div class="form-group">
+            <label for="register-email">Email</label>
+            <input type="email" id="register-email" name="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="register-password">Contraseña</label>
+            <input type="password" id="register-password" name="password" required 
+                   minlength="6" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" />
+            <small>La contraseña debe tener al menos 6 caracteres, una mayúscula, una minúscula y un número.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="register-password-confirm">Confirmar Contraseña</label>
+            <input type="password" id="register-password-confirm" name="password-confirm" required />
+          </div>
+
+          <button type="submit" class="btn">Registrarse</button>
+
+          <button type="button" id="btn-google-register" class="btn-google">
+            <img src="assets/google-icon.png" alt="Google" />
+            Registrarse con Google
+          </button>
+        </form>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2025 Cocina Comunitaria. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+
+    <script type="module">
+      import { inicializarAuth } from './js/auth.js';
+      
+      // Inicializar autenticación
+      inicializarAuth();
+
+      // Manejar tabs de autenticación
+      const tabs = document.querySelectorAll('.auth-tab');
+      const forms = document.querySelectorAll('.auth-form');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const target = tab.dataset.tab;
+          
+          // Actualizar tabs
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          
+          // Actualizar forms
+          forms.forEach(form => {
+            form.classList.remove('active');
+            if (form.id === `form-${target}`) {
+              form.classList.add('active');
+            }
+          });
+        });
+      });
+
+      // Validar confirmación de contraseña
+      const formRegistro = document.getElementById('form-registro');
+      const password = document.getElementById('register-password');
+      const confirmPassword = document.getElementById('register-password-confirm');
+
+      function validarPassword() {
+        if (password.value !== confirmPassword.value) {
+          confirmPassword.setCustomValidity('Las contraseñas no coinciden');
+        } else {
+          confirmPassword.setCustomValidity('');
+        }
+      }
+
+      password.addEventListener('change', validarPassword);
+      confirmPassword.addEventListener('keyup', validarPassword);
+    </script>
+  </body>
+</html> 
